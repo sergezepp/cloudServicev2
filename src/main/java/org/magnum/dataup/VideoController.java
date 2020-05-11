@@ -24,7 +24,7 @@ public class VideoController {
 
 	@RequestMapping(value = "/video", method = RequestMethod.POST,
 			produces = {"application/json; charset=utf-8"} , headers = { "Accept=application/json" })
-	public @ResponseBody Video getVideosList(@RequestBody Video video){
+	public @ResponseBody Video saveVideoMetadata(@RequestBody Video video){
 		return  videoFileManager.saveVideoMetaData(video);
 	}
 	
