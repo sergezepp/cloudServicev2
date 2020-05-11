@@ -65,6 +65,8 @@ dependencies {
     testCompile("junit:junit")
 }
 
-task wrapper(type: Wrapper) {
+task wrapper2(type: Wrapper) {
     gradleVersion = '5.0'
 }
+
+mainClassName = 'org.magnum.dataup.Application'

@@ -25,8 +25,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import org.magnum.dataup.model.Video;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * This class provides a simple implementation to store video binary
@@ -36,7 +44,31 @@ import org.magnum.dataup.model.Video;
  * @author jules
  *
  */
+@Service
 public class VideoFileManager {
+
+	private static final AtomicLong currentId = new AtomicLong(0L);
+	private Map<Long,Video> videos = new HashMap<Long, Video>();
+
+	private Video save(Video entity) {
+		checkAndSetId(entity);
+		entity.setDataUrl(getDataUrl(entity.getId()));
+		videos.put(entity.getId(), entity);
+		return entity;
+	}
+
+	private void checkAndSetId(Video entity) {
+		if(entity.getId() == 0){
+			entity.setId(currentId.incrementAndGet());
+		}
+	}
+
+	{
+		Video videoTest = new Video();
+		videoTest.setDuration(123);
+		videoTest.setTitle("TEST");
+		save(videoTest);
+	}
 
 	/**
 	 * This static factory method creates and returns a 
@@ -108,9 +140,26 @@ public class VideoFileManager {
 	 */
 	public void saveVideoData(Video v, InputStream videoData) throws IOException{
 		assert(videoData != null);
-		
 		Path target = getVideoPath(v);
 		Files.copy(videoData, target, StandardCopyOption.REPLACE_EXISTING);
 	}
-	
+
+	public Video saveVideoMetaData(Video video){
+		return save(video);
+	}
+
+	public Collection<Video> getVideosList(){
+		return new ArrayList<>(videos.values());
+	}
+
+	private String getDataUrl(long videoId){
+		String url = getUrlBaseForLocalServer() + "/video/" + videoId + "/data";
+		return url;
+	}
+
+	private String getUrlBaseForLocalServer() {
+		String base = "http://localhost:8080";
+		return base;
+	}
+
 }
