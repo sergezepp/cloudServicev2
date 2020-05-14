@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -67,7 +68,7 @@ public class VideoFileManager {
 		Video videoTest = new Video();
 		videoTest.setDuration(123);
 		videoTest.setTitle("TEST");
-		save(videoTest);
+		//save(videoTest);
 	}
 
 	/**
@@ -86,7 +87,9 @@ public class VideoFileManager {
 	
 	// The VideoFileManager.get() method should be used
 	// to obtain an instance
-	private VideoFileManager() throws IOException{
+	@PostConstruct
+	public void init() throws IOException{
+		System.out.println("path:" +targetDir_ );
 		if(!Files.exists(targetDir_)){
 			Files.createDirectories(targetDir_);
 		}
@@ -95,7 +98,7 @@ public class VideoFileManager {
 	// Private helper method for resolving video file paths
 	private Path getVideoPath(Video v){
 		assert(v != null);
-		
+		System.out.println("inside  getVideoPath path:" +targetDir_ );
 		return targetDir_.resolve("video"+v.getId()+".mpg");
 	}
 	
@@ -141,6 +144,7 @@ public class VideoFileManager {
 	public void saveVideoData(Video v, InputStream videoData) throws IOException{
 		assert(videoData != null);
 		Path target = getVideoPath(v);
+		System.out.println("path:" +target );
 		Files.copy(videoData, target, StandardCopyOption.REPLACE_EXISTING);
 	}
 
@@ -150,6 +154,10 @@ public class VideoFileManager {
 
 	public Collection<Video> getVideosList(){
 		return new ArrayList<>(videos.values());
+	}
+
+	public Video getVideoMetadata(Long id){
+		return videos.get(id);
 	}
 
 	private String getDataUrl(long videoId){
