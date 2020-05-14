@@ -51,7 +51,7 @@ public class VideoController {
 
 		VideoStatus videostatus = new VideoStatus(VideoStatus.VideoState.READY);
 
-		return new  ResponseEntity(videostatus, HttpStatus.OK);
+		return new  ResponseEntity<VideoStatus>(videostatus, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/video/{id}/data", method = RequestMethod.GET,
@@ -69,10 +69,10 @@ public class VideoController {
 				e.printStackTrace();
 				return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 			}
-			return new  ResponseEntity(HttpStatus.OK);
+			return new  ResponseEntity<String>(HttpStatus.OK);
 
 	    }else{
-			return new  ResponseEntity(HttpStatus.NOT_FOUND);
+			return new  ResponseEntity<String>(HttpStatus.NOT_FOUND);
 		}
 	}
 
