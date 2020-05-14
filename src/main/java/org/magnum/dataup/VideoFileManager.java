@@ -41,8 +41,7 @@ import javax.servlet.http.HttpServletRequest;
  * This class provides a simple implementation to store video binary
  * data on the file system in a "videos" folder. The class provides
  * methods for saving videos and retrieving their binary data.
- * 
- * @author jules
+ *
  *
  */
 @Service
@@ -64,32 +63,10 @@ public class VideoFileManager {
 		}
 	}
 
-	{
-		Video videoTest = new Video();
-		videoTest.setDuration(123);
-		videoTest.setTitle("TEST");
-		//save(videoTest);
-	}
-
-	/**
-	 * This static factory method creates and returns a 
-	 * VideoFileManager object to the caller. Feel free to customize
-	 * this method to take parameters, etc. if you want.
-	 * 
-	 * @return
-	 * @throws IOException
-	 */
-	public static VideoFileManager get() throws IOException {
-		return new VideoFileManager();
-	}
-	
 	private Path targetDir_ = Paths.get("videos");
-	
-	// The VideoFileManager.get() method should be used
-	// to obtain an instance
+
 	@PostConstruct
 	public void init() throws IOException{
-		System.out.println("path:" +targetDir_ );
 		if(!Files.exists(targetDir_)){
 			Files.createDirectories(targetDir_);
 		}
@@ -98,7 +75,6 @@ public class VideoFileManager {
 	// Private helper method for resolving video file paths
 	private Path getVideoPath(Video v){
 		assert(v != null);
-		System.out.println("inside  getVideoPath path:" +targetDir_ );
 		return targetDir_.resolve("video"+v.getId()+".mpg");
 	}
 	
@@ -144,7 +120,6 @@ public class VideoFileManager {
 	public void saveVideoData(Video v, InputStream videoData) throws IOException{
 		assert(videoData != null);
 		Path target = getVideoPath(v);
-		System.out.println("path:" +target );
 		Files.copy(videoData, target, StandardCopyOption.REPLACE_EXISTING);
 	}
 

@@ -80,7 +80,7 @@ public class AutoGradingTest {
 			.withTitle(UUID.randomUUID().toString()).build();
 
 	private VideoSvcApi videoSvc = new RestAdapter.Builder()
-			.setEndpoint("http://127.0.0.1:8080").build()
+			.setEndpoint(SERVER).build()
 			.create(VideoSvcApi.class);
 
 	@Rubric(
