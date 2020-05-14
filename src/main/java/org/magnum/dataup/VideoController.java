@@ -41,8 +41,8 @@ public class VideoController {
 
 		if (videoMetadata == null ) return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 
+		videoFileManager.saveVideoData(videoMetadata , file.getInputStream());
 
-			videoFileManager.saveVideoData(videoMetadata , file.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -59,6 +59,8 @@ public class VideoController {
 	public ResponseEntity<?> getVideoData(@PathVariable String id , HttpServletResponse response) {
 
 		Video videoMetadata = videoFileManager.getVideoMetadata(Long.valueOf(id));
+
+		if (videoMetadata == null ) return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 
 		if (videoFileManager.hasVideoData(videoMetadata)){
 			try {
